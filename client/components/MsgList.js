@@ -36,17 +36,23 @@ const originalMsgs = Array(50)
 // ];
 
 const MsgList = () => {
+  // input값을 제출하면 새글이 생성되거나 기존 글이 수정되므로
+  // 기존의 길이 50짜리 댓글 배열은 '변동'하는 요소임 = state로 선언
   const [msgs, setMsgs] = useState(originalMsgs);
 
+  // 새글 생성하는 함수
   const onCreate = (text) => {
+    // 새글 객체를 구성
     const newMsg = {
-      id: msgs.length,
+      // 이제는 map으로 꺼낸 id가 아닌, 기존 댓글배열의 길이를 이용하면 됨 (key와 댓글 인덱스)
+      id: msgs.length + 1,
       userId: getRamdomUserId(),
-      timestamp: Date.now(),
+      timestamp: Date.now() /* 현재 날짜 및 시간 */,
       text: `${msgs.length + 1} ${text}`,
     };
+
+    // 댓글 배열에 setter 함수와 spread 연산자를 이용하여 새글 객체를 추가
     setMsgs((msgs) => [newMsg, ...msgs]);
-    console.log(msgs);
   };
 
   return (
