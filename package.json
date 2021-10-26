@@ -1,0 +1,17 @@
+{
+  "name": "api-practice",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Yena-Yun/api-practice.git",
+  "author": "Yena-Yun <cheryleduart@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "client": "yarn workspace client start",
+    "server": "yarn workspace server start"
+  }
+}
