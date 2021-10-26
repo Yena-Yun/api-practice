@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import MsgInput from './MsgInput';
 import MsgItem from './MsgItem';
 
 // 유저아이디 배열
@@ -14,7 +16,7 @@ const getRamdomUserId = () => UserIds[Math.round(Math.random())];
 // .fill(0): 50개의 공간을 아무 값으로나 채움
 // .map(val, i): map으로 꺼내는 val이 중요하지 않으면 '_'로 처리 (i를 사용하기 위한 map이어서)
 // ()(return) 안에 {} (=> 객체 반환)
-const msgs = Array(50)
+const originalMsgs = Array(50)
   .fill(0)
   .map((_, i) => ({
     id: i + 1,
@@ -33,12 +35,30 @@ const msgs = Array(50)
 //   },
 // ];
 
-const MsgList = () => (
-  <ul className='messages'>
-    {msgs.map((x) => (
-      <MsgItem key={x.id} {...x} />
-    ))}
-  </ul>
-);
+const MsgList = () => {
+  const [msgs, setMsgs] = useState(originalMsgs);
+
+  const onCreate = (text) => {
+    const newMsg = {
+      id: msgs.length,
+      userId: getRamdomUserId(),
+      timestamp: Date.now(),
+      text: `${msgs.length + 1} ${text}`,
+    };
+    setMsgs((msgs) => [newMsg, ...msgs]);
+    console.log(msgs);
+  };
+
+  return (
+    <>
+      <MsgInput mutate={onCreate} />
+      <ul className='messages'>
+        {msgs.map((x) => (
+          <MsgItem key={x.id} {...x} />
+        ))}
+      </ul>
+    </>
+  );
+};
 
 export default MsgList;
