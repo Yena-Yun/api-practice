@@ -37,8 +37,10 @@ const originalMsgs = Array(50)
 // ];
 
 const MsgList = () => {
-  // input값을 제출하면 새글 생성 또는 기존 글 수정 => 초기값인 길이 50의 댓글배열은 '변하는 요소'가 됨 => state로 선언
+  // input값을 제출하면 새글 생성 또는 기존 글 수정 => 초기값인 길이 50의 댓글배열은 '변하는' 요소가 됨 => state로 선언
   const [msgs, setMsgs] = useState(originalMsgs);
+  // 수정할 글 id ('변동' 가능하므로 state로 선언)
+  const [editingId, setEditingId] = useState(null);
 
   // 새글 생성하는 함수
   const onCreate = (text) => {
@@ -55,12 +57,43 @@ const MsgList = () => {
     setMsgs((msgs) => [newMsg, ...msgs]);
   };
 
+  // 글 수정하는 함수 (** input값 text와 함께 어느 글을 수정할 것인지 알려주는 id도 필요)
+  const onUpdate = (id, text) => {
+    // setter에 기존 댓글배열(msgs)을 받아와서 진행
+    setMsgs((msgs) => {
+      // targetIndex 구하기
+      // 수정할 Item의 targetIndex를 findIndex(배열메서드)로 찾음
+      // findIndex: 배열을 돌면서 특정 조건을 만족하는 item의 '인덱스'를 반환 (cf. filter: 특정 조건을 만족하는 item들만 골라 '새 배열'로 반환)
+      const targetIndex = msgs.findIndex((msg) => msg.id === id);
+
+      // (예외처리) 찾는 Index가 없으면(-1) 기존 배열 그대로 반환
+      if (targetIndex < 0) return msgs;
+
+      // ** 수정 진행하기
+      // 기존 댓글배열을 spread로 펼친 뒤 다시 []에 넣어 새 배열 생성 (copy)
+      const newMsgs = [...msgs];
+
+      // 새 배열에서 splice를 이용해 targetIndex부터 1개(deleteCount)를 지우고 그 자리에 새로운 item(3항)을 넣음
+      // 새로운 item: targetIndex에 있는 기존 내용들은 그대로 넣고 text만 새걸로 교체
+      newMsgs.splice(targetIndex, 1, {
+        ...msgs[targetIndex],
+        text: text,
+      });
+
+      // 수정된 새 배열 반환 (-> setter에 들어가 msgs가 통째로 교체됨)
+      return newMsgs;
+    });
+  };
+
   return (
     <>
       <MsgInput mutate={onCreate} />
       <ul className='messages'>
         {msgs.map((x) => (
-          <MsgItem key={x.id} {...x} />
+          // 여기서는 {...x}로 전부 넣고 MsgItem에서 쓸 때는 일부만 골라 사용 가능
+          // 수정에 필요한 onUpdate, startEdit, isEditing을 미리 넣어줌
+          // (수정이 시작되어 수정할 글의 id를 상위 state(editingId)로 가져오는 startEdit과, 렌더링 중인 item 중 editingId와 id가 일치하는 item이 있는지 여부를 알리는 isEditing은 따로 useState로 선언하지 x)
+          <MsgItem key={x.id} {...x} onUpdate={onUpdate} startEdit={() => setEditingId(x.id)} isEditing={editingId === x.id} />
         ))}
       </ul>
     </>
