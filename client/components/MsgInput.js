@@ -18,7 +18,6 @@ const MsgInput = ({ mutate }) => {
     const text = textRef.current.value;
     // (값 가져오고 나면) input창 초기화
     textRef.current.value = '';
-
     // 받아온 상위 메서드(mutate)에 input값 전달
     mutate(text);
   };

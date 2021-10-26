@@ -6,15 +6,16 @@ import MsgItem from './MsgItem';
 const UserIds = ['roy', 'jay'];
 
 // 유저아이디 (둘 중에 하나) 랜덤하게 넣기
+// UserIds 배열의 인덱스에 랜덤 함수 넣기
 // 2개뿐일 때는 Math.round만 처리 -> 0 또는 1
 const getRamdomUserId = () => UserIds[Math.round(Math.random())];
 
-// 3개 이상일 때는 Math.random() 뒤에 배열의 길이를 곱하는 과정 추가
+// 3개 이상일 때는 Math.random() 뒤에 배열의 길이 곱하기
 // const getRamdomUserId = () => UserIds[Math.round(Math.random() * UserIds.length)];
 
 // Array(50): 공간이 50개인 배열 생성
 // .fill(0): 50개의 공간을 아무 값으로나 채움
-// .map(val, i): map으로 꺼내는 val이 중요하지 않으면 '_'로 처리 (i를 사용하기 위한 map이어서)
+// .map(val, i): map으로 꺼내는 val이 중요하지 않으면 '_'로 처리 (=> i만 사용하려는 경우)
 // ()(return) 안에 {} (=> 객체 반환)
 const originalMsgs = Array(50)
   .fill(0)
@@ -36,22 +37,21 @@ const originalMsgs = Array(50)
 // ];
 
 const MsgList = () => {
-  // input값을 제출하면 새글이 생성되거나 기존 글이 수정되므로
-  // 기존의 길이 50짜리 댓글 배열은 '변동'하는 요소임 = state로 선언
+  // input값을 제출하면 새글 생성 또는 기존 글 수정 => 초기값인 길이 50의 댓글배열은 '변하는 요소'가 됨 => state로 선언
   const [msgs, setMsgs] = useState(originalMsgs);
 
   // 새글 생성하는 함수
   const onCreate = (text) => {
     // 새글 객체를 구성
     const newMsg = {
-      // 이제는 map으로 꺼낸 id가 아닌, 기존 댓글배열의 길이를 이용하면 됨 (key와 댓글 인덱스)
+      // 이제는 map으로 얻은 id가 아닌 기존 댓글배열의 길이를 이용 (=> key와 text 옆에 나타나는 인덱스)
       id: msgs.length + 1,
       userId: getRamdomUserId(),
       timestamp: Date.now() /* 현재 날짜 및 시간 */,
       text: `${msgs.length + 1} ${text}`,
     };
 
-    // 댓글 배열에 setter 함수와 spread 연산자를 이용하여 새글 객체를 추가
+    // 댓글배열에 setter 함수와 spread 연산자를 이용하여 새글 객체를 추가
     setMsgs((msgs) => [newMsg, ...msgs]);
   };
 
