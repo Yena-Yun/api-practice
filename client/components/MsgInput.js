@@ -3,7 +3,7 @@ import { useRef } from 'react';
 // input의 내용을 MsgList에서는 'create'에 쓸 거고 MsgItem에서는 'update'에 쓸 예정
 // 각각의 경우에 수행할 메서드가 다름 => 'mutate'로 뭉뚱그려 선언하고 그 안에 input값 전달
 // (id = undefined: id값 받아오는데 없을 수도 있음 => MsgItem에서 수정버튼이 눌려서 넘어온 id가 있을 경우 mutate를 통해 id가 전달되어 MsgList 레벨에서 onUpdate 실행)
-const MsgInput = ({ mutate, id = undefined }) => {
+const MsgInput = ({ mutate, text = '', id = undefined }) => {
   // onChange, onInput 방법 외에 useRef를 이용하는 방법이 있음
   // input창(textarea)을 useRef로 '가리킴'
   const textRef = useRef(null);
@@ -26,7 +26,7 @@ const MsgInput = ({ mutate, id = undefined }) => {
 
   return (
     <form className='messages__input' onSubmit={onSubmit}>
-      <textarea ref={textRef} placeholder='내용을 입력하세요.' />
+      <textarea ref={textRef} defaultValue={text} placeholder='내용을 입력하세요.' />
       <button type='submit'>완료</button>
     </form>
   );

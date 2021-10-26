@@ -58,7 +58,7 @@ const MsgList = () => {
   };
 
   // 글 수정하는 함수 (** input값 text와 함께 어느 글을 수정할 것인지 알려주는 id도 필요)
-  const onUpdate = (id, text) => {
+  const onUpdate = (text, id) => {
     // setter에 기존 댓글배열(msgs)을 받아와서 진행
     setMsgs((msgs) => {
       // targetIndex 구하기
@@ -83,7 +83,30 @@ const MsgList = () => {
       // 수정된 새 배열 반환 (-> setter에 들어가 msgs가 통째로 교체됨)
       return newMsgs;
     });
+
+    // 수정이 끝나면 실행
+    doneEdit();
   };
+
+  const onDelete = (id) => {
+    setMsgs((msgs) => {
+      const targetIndex = msgs.findIndex((msg) => msg.id === id);
+      if (targetIndex < 0) return msgs;
+
+      // ** 삭제 진행하기
+      // 기존 댓글배열을 spread로 펼친 뒤 다시 []에 넣어 새 배열 생성 (copy)
+      const newMsgs = [...msgs];
+
+      // 새 배열에서 splice를 이용해 targetIndex부터 1개(deleteCount)를 지움
+      newMsgs.splice(targetIndex, 1);
+
+      // 삭제된 새 배열 반환 (-> setter에 들어가 msgs가 통째로 교체됨)
+      return newMsgs;
+    });
+  };
+
+  // 수정이 완료됨을 알려주는 메서드 (editingId를 null로 바꿔서 isEditing을 false로 바꿈 => MsgInput이 사라지고 수정된 text로 대체)
+  const doneEdit = () => setEditingId(null);
 
   return (
     <>
@@ -93,7 +116,14 @@ const MsgList = () => {
           // 여기서는 {...x}로 전부 넣고 MsgItem에서 쓸 때는 일부만 골라 사용 가능
           // 수정에 필요한 onUpdate, startEdit, isEditing을 미리 넣어줌
           // (수정이 시작되어 수정할 글의 id를 상위 state(editingId)로 가져오는 startEdit과, 렌더링 중인 item 중 editingId와 id가 일치하는 item이 있는지 여부를 알리는 isEditing은 따로 useState로 선언하지 x)
-          <MsgItem key={x.id} {...x} onUpdate={onUpdate} startEdit={() => setEditingId(x.id)} isEditing={editingId === x.id} />
+          <MsgItem
+            key={x.id}
+            {...x}
+            onUpdate={onUpdate}
+            startEdit={() => setEditingId(x.id)}
+            isEditing={editingId === x.id}
+            onDelete={() => onDelete(x.id)}
+          />
         ))}
       </ul>
     </>
