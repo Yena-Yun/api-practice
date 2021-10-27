@@ -27,14 +27,8 @@ const originalMsgs = Array(50)
   }))
   .reverse(); /* 최근 순서로 찍히도록 (SNS)  */
 
-// const msgs = [
-//   {
-//     id: 1,
-//     userId: getRamdomUserId(),
-//     timestamp: 1234567890123 /* 총 13자리 필요 */,
-//     text, '1 mock text'
-//   },
-// ];
+// console.log(originalMsgs);
+console.log(JSON.stringify(originalMsgs)); // 배열 하나에 객체 여러 개 = json 형태로 만들어줌
 
 const MsgList = () => {
   // input값을 제출하면 새글 생성 또는 기존 글 수정 => 초기값인 길이 50의 댓글배열은 '변하는' 요소가 됨 => state로 선언
