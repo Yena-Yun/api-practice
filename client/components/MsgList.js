@@ -27,6 +27,7 @@ const originalMsgs = Array(50)
   }))
   .reverse(); /* 최근 순서로 찍히도록 (SNS)  */
 
+// 만든 배열을 console에 JSON.stringify로 찍어서 json 파일에 복붙 가능
 // console.log(originalMsgs);
 console.log(JSON.stringify(originalMsgs)); // 배열 하나에 객체 여러 개 = json 형태로 만들어줌
 
