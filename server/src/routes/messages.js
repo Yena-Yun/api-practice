@@ -100,8 +100,8 @@ const messagesRoute = [
     // DELETE MESSAGE
     method: 'delete',
     route: '/messages/:id',
-    // params의 {id}: MsgList의 fetcher의 `/messages/${id}`에 붙은 id
-    // query: { userId }: MsgList의 fetcher의 params: { userId }로 넘어온 userId
+    // params의 {id}: MsgList fetcher의 `/messages/${id}` 뒤에 붙은 id
+    // query의 {userId}: MsgList fetcher의 params로 넘어온 userId
     handler: ({ params: { id }, query: { userId } }, res) => {
       try {
         const msgs = getMsgs();

@@ -106,13 +106,15 @@ const MsgList = () => {
   };
 
   const onDelete = async (id) => {
-    // 삭제하는 글의 id 외에 해당 글의 'userId'도 서버에서 받아와야 함 => 이때 'params' 사용
+    // 삭제하는 글의 id 외에 해당 글의 'userId'도 서버에 보내야 함 => 이때 'params'로 보내고 받는 쪽에서는 query로 받음
     // { params: { userId } }: url 뒤에 ? userId = roy 라고 들어가는 부분
     // params: { userId }를 빼고 `/messages/${id}?userId={userId}`라고 보내도 동일
     const receivedId = await fetcher('delete', `/messages/${id}`, { params: { userId } });
+    console.log(typeof receivedId, typeof id); // (messages.json에서 현재 id가 문자열로 되어있음)
 
     setMsgs((msgs) => {
-      const targetIndex = msgs.findIndex((msg) => msg.id === receivedId);
+      // 삭제한 내용이 뷰에 반영이 안되는 경우 --> id의 type이 안 맞는 것일 수 있음 (콘솔로 비교하는 두 아이디를 출력해보고 한쪽을 다른 쪽에 맞춰준다)
+      const targetIndex = msgs.findIndex((msg) => msg.id === String(receivedId));
       if (targetIndex < 0) return msgs;
 
       // ** 삭제 진행 (수정에서 item 추가하는 부분만 없음)
