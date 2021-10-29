@@ -102,6 +102,7 @@ const messagesRoute = [
     route: '/messages/:id',
     // params의 {id}: MsgList fetcher의 `/messages/${id}` 뒤에 붙은 id
     // query의 {userId}: MsgList fetcher의 params로 넘어온 userId
+    // id는 url에 바로 붙어 넘어오므로 params로 받고, userId는 ?를 붙이고 그 뒤에 붙어오기 때문에 query로 받음(?)
     handler: ({ params: { id }, query: { userId } }, res) => {
       try {
         const msgs = getMsgs();
@@ -118,8 +119,8 @@ const messagesRoute = [
         // 삭제가 완료된 배열을 setMsgs에 넣어 db에 저장
         setMsgs(msgs);
 
-        // 응답은 id 반환 (해당 id의 글이 삭제됐다는 의미) => MsgList에서 receivedId로 받음
-        res.send(id);
+        // 응답은 id 반환 (= 삭제한 글의 id)
+        res.send(id); /* 여기서 반환된 id가 MsgList fetcher의 receivedId로 들어감 */
       } catch (err) {
         // 삭제 실패 시에는 500번 에러를 던지고 err 내용을 보냄
         res.status(500).send({ error: err });

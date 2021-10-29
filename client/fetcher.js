@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // baseURL을 지정 (url 앞에 자동으로 붙음)
-axios.defaults.baseURL = 'http://localhost:8000';
+axios.defaults.baseURL = 'http://localhost:8000'; /* 서버 url */
 
 // axios를 통해 서버에서 응답을 받아오는 걸 fetcher 함수로 처리
 const fetcher = async (method, url, ...rest) => {

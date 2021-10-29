@@ -5,7 +5,7 @@ import MsgItem from './MsgItem';
 import fetcher from '../fetcher';
 
 // 유저아이디 배열
-const UserIds = ['roy', 'jay'];
+// const UserIds = ['roy', 'jay'];
 
 // 유저아이디 (둘 중에 하나) 랜덤하게 넣기
 // UserIds 배열의 인덱스에 랜덤 함수 넣기
@@ -110,10 +110,10 @@ const MsgList = () => {
     // { params: { userId } }: url 뒤에 ? userId = roy 라고 들어가는 부분
     // params: { userId }를 빼고 `/messages/${id}?userId={userId}`라고 보내도 동일
     const receivedId = await fetcher('delete', `/messages/${id}`, { params: { userId } });
-    console.log(typeof receivedId, typeof id); // (messages.json에서 현재 id가 문자열로 되어있음)
+    console.log(typeof receivedId, typeof id); // number, string (=> messages.json에서 현재 id가 문자열로 되어있어서)
 
     setMsgs((msgs) => {
-      // 삭제한 내용이 뷰에 반영이 안되는 경우 --> id의 type이 안 맞는 것일 수 있음 (콘솔로 비교하는 두 아이디를 출력해보고 한쪽을 다른 쪽에 맞춰준다)
+      // 삭제한 내용이 뷰에 반영이 안되는 경우 --> id의 type이 안 맞는 것일 수 있음 (콘솔로 두 아이디를 출력해보고 한쪽을 다른 쪽에 맞춰준다)
       const targetIndex = msgs.findIndex((msg) => msg.id === String(receivedId));
       if (targetIndex < 0) return msgs;
 
