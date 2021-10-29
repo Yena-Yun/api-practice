@@ -1,6 +1,6 @@
 import MsgInput from './MsgInput';
 
-const MsgItem = ({ id, userId, timestamp, text, onUpdate, isEditing, startEdit, onDelete }) => (
+const MsgItem = ({ id, userId, timestamp, text, onUpdate, isEditing, startEdit, onDelete, myId }) => (
   <li className='messages__item'>
     <h3>
       {userId}{' '}
@@ -27,11 +27,14 @@ const MsgItem = ({ id, userId, timestamp, text, onUpdate, isEditing, startEdit, 
       text
     )}
 
-    <div className='messages__buttons'>
-      {/* 수정버튼 클릭 시 startEdit(함수) 실행 => map으로 돌던 x 중 수정버튼이 눌린 x의 id가 editingId에 설정됨 => 현재 차례에서 돌고 있던 x의 id가 editingId와 일치하면 isEditing이 true가 되면서 text 대신 MsgInput창 렌더링 */}
-      <button onClick={startEdit}>수정</button>
-      <button onClick={onDelete}>삭제</button>
-    </div>
+    {/* url에 적힌 userId와 hover한 item의 userId가 같을 때만 수정/삭제 버튼 나타남 */}
+    {myId === userId && (
+      <div className='messages__buttons'>
+        {/* 수정버튼 클릭 시 startEdit(함수) 실행 => map으로 돌던 x 중 수정버튼이 눌린 x의 id가 editingId에 설정됨 => 현재 차례에서 돌고 있던 x의 id가 editingId와 일치하면 isEditing이 true가 되면서 text 대신 MsgInput창 렌더링 */}
+        <button onClick={startEdit}>수정</button>
+        <button onClick={onDelete}>삭제</button>
+      </div>
+    )}
   </li>
 );
 

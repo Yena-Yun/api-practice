@@ -66,8 +66,10 @@ const messagesRoute = [
       try {
         // db에서 기존 배열 읽어오기
         const msgs = getMsgs();
+
         // 수정할 글의 인덱스
         const targetIndex = msgs.findIndex((msg) => msg.id === id);
+        console.log(targetIndex);
 
         // targetIndex가 없는 경우 (-1)
         if (targetIndex < 0) throw '메시지가 없습니다.';
@@ -77,7 +79,7 @@ const messagesRoute = [
         // (위의 에러들을 모두 통과한 경우) 새 메시지 생성
         // (text만 교체하고 나머지는 그대로 유지)
         const newMsg = {
-          ...msg[targetIndex],
+          ...msgs[targetIndex],
           text: body.text,
         };
 
@@ -89,6 +91,7 @@ const messagesRoute = [
         // 응답은 만들어진 새로 변경된 메시지를 보내줌
         res.send(newMsg);
       } catch (err) {
+        console.error('수정에 실패하였습니다');
         res.status(500).send({ error: err });
       }
     },
@@ -97,14 +100,16 @@ const messagesRoute = [
     // DELETE MESSAGE
     method: 'delete',
     route: '/messages/:id',
-    handler: ({ body, params: { id } }, res) => {
+    // params의 {id}: MsgList의 fetcher의 `/messages/${id}`에 붙은 id
+    // query: { userId }: MsgList의 fetcher의 params: { userId }로 넘어온 userId
+    handler: ({ params: { id }, query: { userId } }, res) => {
       try {
         const msgs = getMsgs();
         // 삭제할 글의 인덱스
         const targetIndex = msgs.findIndex((msg) => msg.id === id);
 
         if (targetIndex < 0) throw '메시지가 없습니다.';
-        if (msgs[targetIndex].userId !== body.userId) throw '사용자가 다릅니다.';
+        if (msgs[targetIndex].userId !== userId) throw '사용자가 다릅니다.';
 
         // (위의 에러들을 모두 통과한 경우)
         // 기존 배열 수정: splice로 삭제
@@ -113,7 +118,7 @@ const messagesRoute = [
         // 삭제가 완료된 배열을 setMsgs에 넣어 db에 저장
         setMsgs(msgs);
 
-        // 응답은 id만 넘겨주기 (삭제가 성공했을 때 성공했다는 의미로 '이 id가 지워졌다'고 알려줌)
+        // 응답은 id 반환 (해당 id의 글이 삭제됐다는 의미) => MsgList에서 receivedId로 받음
         res.send(id);
       } catch (err) {
         // 삭제 실패 시에는 500번 에러를 던지고 err 내용을 보냄

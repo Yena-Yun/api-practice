@@ -34,7 +34,7 @@ export const writeDB = (target, data) => {
   try {
     // fs로부터 writeFileSync 실행
     // 가져온 data가 자바스크립트 문법이므로 JSON.stringify로 json화 해줌
-    return fs.writeFileSync(filename[target], JSON.stringify(data));
+    return fs.writeFileSync(filenames[target], JSON.stringify(data));
 
     // 에러 핸들링
   } catch (err) {
