@@ -24,12 +24,13 @@ app.use(
 //   res.send('ok');
 // });
 
+// 서버의 최상단(index)에 routes 연결
+// ** 반복되는 부분을 함수로 만들고 싶다면, 반복되는 부분(forEach 이하)은 그대로 두고, 바뀌는 기점이 되는 부분을 변수(routes)로 변경한 뒤 그 변수의 배열 안에 바뀌는 요소들(messagesRoute, usersRoute, ...) 담기
 const routes = [...messagesRoute, ...usersRoute];
 
-// ** 반복되는 부분을 함수로 만들고 싶다면
-// 반복되는 부분(forEach 이하)은 그대로 두고 바뀌는 기점이 되는 부분을 변수(routes)로 변경한 뒤 그 변수 안에 바뀔 요소들을 담는다
+// routes 배열에서 각 json 파일에서 내보낸 두 변수(messagesRoute(messages.js)와 usersRoute(users.js))를 돌면서
 routes.forEach(({ method, route, handler }) => {
-  // express로 만든 app이 객체인듯 -> 배열 내에서 method 키값([])으로 가져옴
+  // app 객체에 각 route의 method, route, handler를 전달
   app[method](route, handler);
 });
 
