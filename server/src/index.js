@@ -19,18 +19,21 @@ app.use(
 );
 
 // 예시
-// GET 메서드로 '/'(route)에 핸들러(콜백) 실행 (하나하나의 route가 api 명령어가 됨)
+// GET 메서드로 '/'(route, 경로)에 핸들러(콜백함수) 실행 (하나하나의 route가 api 명령어가 됨)
 // app.get('/', (req, res) => {
 //   res.send('ok');
 // });
 
-// 서버의 최상단(index)에 routes 연결
-// ** 반복되는 부분을 함수로 만들고 싶다면, 반복되는 부분(forEach 이하)은 그대로 두고, 바뀌는 기점이 되는 부분을 변수(routes)로 변경한 뒤 그 변수의 배열 안에 바뀌는 요소들(messagesRoute, usersRoute, ...) 담기
+// 서버의 최상단(index.js)에 route(messages.js, users.js) 연결
+// ** 반복되는 부분을 함수로 만들고 싶다면
+// 반복되는 부분(forEach 이하)은 그대로 두고, 바뀌는 기점이 되는 부분을 변수(routes)로 변경하고, 그 변수 안에 바뀌어서 각각 들어갈 요소들(messagesRoute, usersRoute) 담기
 const routes = [...messagesRoute, ...usersRoute];
 
-// routes 배열에서 각 json 파일에서 내보낸 두 변수(messagesRoute(messages.js)와 usersRoute(users.js))를 돌면서
+// routes 배열을 돌면서 (routes = messagesRoute 또는 usersRoute, 각각의 경우도 '배열')
 routes.forEach(({ method, route, handler }) => {
-  // app 객체에 각 route의 method, route, handler를 전달
+  /* 배열 안의 각 객체당 method, route, handler 키에 해당하는 value들을 props로 받아옴 */
+
+  // app 객체에 각 route의 method, route, handler 키의 value값을 전달
   app[method](route, handler);
 });
 

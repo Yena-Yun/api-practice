@@ -7,7 +7,7 @@ const App = ({ Component, pageProps }) => <Component {...pageProps} />;
 App.getInitialProps = async ({ ctx, Component }) => {
   // 각 Component 별로 getInitialProps가 정의가 되어 있으면 ctx를 넘김
   const pageProps = await Component.getInitialProps?.(ctx);
-  // pageProps를 props로 넘김 => 위에서 Component와 함께 받아 Component 안에 props로 넣어줌
+  // pageProps를 props로 넘김 => App에서 Component와 함께 받아서 Component 안에 props로 넣어줌
   return { pageProps };
 };
 

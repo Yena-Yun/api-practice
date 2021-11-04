@@ -16,9 +16,9 @@ const filenames = {
 export const readDB = (target) => {
   // 읽어올 때 에러 발생 가능 => try/catch로 대비
   try {
-    // fs(파일시스템)로부터 readFileSync 실행
-    // (filenames 객체에서 target 키에 해당하는 value값을 불러옴, 이때 'utf-8'로 인코딩 명시를 해줘야 내용이 안 깨짐)
-    // + 파일을 읽어올 때 json 형태로 읽어옴 => 이걸 자바스크립트 문법으로 바꾸기 위해 JSON.parse
+    // fs(파일시스템)의 readFileSync 실행
+    // (filenames 객체에서 target(messages 또는 users)에 해당하는 value를 불러옴 + 이때 'utf-8'로 인코딩 명시를 해줘야 내용이 안 깨짐)
+    // JSON.parse: DB에서 json 형태로 읽어온 파일을 javascript 문법으로 바꿈
     return JSON.parse(fs.readFileSync(filenames[target], 'utf-8'));
 
     // 에러 핸들링
@@ -32,8 +32,8 @@ export const readDB = (target) => {
 export const writeDB = (target, data) => {
   // 저장할 때 에러 발생 가능 => try/catch로 대비
   try {
-    // fs로부터 writeFileSync 실행
-    // 가져온 data가 자바스크립트 문법이므로 JSON.stringify로 json화 해줌
+    // fs의 writeFileSync 실행
+    // JSON.stringify: 클라이언트에게 받은 data는 javascript 문법 -> JSON.stringify로 json화
     return fs.writeFileSync(filenames[target], JSON.stringify(data));
 
     // 에러 핸들링

@@ -11,9 +11,15 @@ const messagesRoute = [
     // GET MESSAGES (전체 메시지 조회)
     method: 'get',
     route: '/messages',
-    handler: (req, res) => {
+    // cursor = '': cursor가 들어오는데 빈 값('')일 수도 있음
+    handler: ({ query: { cursor = '' } }, res) => {
       const msgs = getMsgs();
-      res.send(msgs);
+      // cursor의 바로 다음 것부터 찾도록 함
+      // 처음에는 cursor가 빈 값이어서 msg.id와 일치하는 게 없어서 findIndex 값이 -1이 나오면서 fromIndex는 최초에는 0이 됨
+      // msg를 20개 불러오면 cursor(배열의 마지막 인덱스)가 19가 되면서 fromIndex는 20이 됨
+      const fromIndex = msgs.findIndex((msg) => msg.id === cursor) + 1;
+      // slice로 잘라서 불러옴 (한번에 불러올 개수: 15개)
+      res.send(msgs.slice(fromIndex, fromIndex + 15));
     },
   },
   {
@@ -51,7 +57,7 @@ const messagesRoute = [
       };
 
       msgs.unshift(newMsg); // 기존 배열에 새 메시지 추가
-      setMsgs(msgs); // 새 메시지가 추가된 배열을 setMsgs를 통해 DB에 write
+      setMsgs(msgs); // 새 메시지가 추가된 배열을 setMsgs를 통해 DB에 write(저장)
 
       // post에 대한 응답은 만들어진 새 메시지 하나만 보내줌
       res.send(newMsg);
@@ -85,7 +91,7 @@ const messagesRoute = [
 
         // 기존 배열 수정: splice로 새 메시지 삽입
         msgs.splice(targetIndex, 1, newMsg);
-        // 수정된 배열을 setMsgs에 넣어 db에 저장
+        // 수정된 배열을 setMsgs에 넣어 db에 write(저장)
         setMsgs(msgs);
 
         // 응답은 만들어진 새로 변경된 메시지를 보내줌
@@ -102,7 +108,7 @@ const messagesRoute = [
     route: '/messages/:id',
     // params의 {id}: MsgList fetcher의 `/messages/${id}` 뒤에 붙은 id
     // query의 {userId}: MsgList fetcher의 params로 넘어온 userId
-    // id는 url에 바로 붙어 넘어오므로 params로 받고, userId는 ?를 붙이고 그 뒤에 붙어오기 때문에 query로 받음(?)
+    // id는 ':'으로 붙어 넘어오므로 params로 받고, userId는 ?를 붙여 넘어오기 때문에 query로 받음
     handler: ({ params: { id }, query: { userId } }, res) => {
       try {
         const msgs = getMsgs();
